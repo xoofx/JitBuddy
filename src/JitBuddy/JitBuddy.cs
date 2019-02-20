@@ -16,9 +16,6 @@ namespace JitBuddy
     /// </summary>
     public static class JitBuddy
     {
-        private static readonly object initLock = new object();
-        private static ClrRuntime _runtime = null;
-
         /// <summary>
         /// Disassemble the method.
         /// </summary>
@@ -41,32 +38,28 @@ namespace JitBuddy
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
-            lock (initLock)
+            using (var dataTarget = DataTarget.AttachToProcess(Process.GetCurrentProcess().Id, UInt32.MaxValue, AttachFlag.Passive))
             {
-                if (_runtime == null)
-                {
-                    var dataTarget = DataTarget.AttachToProcess(Process.GetCurrentProcess().Id, UInt32.MaxValue, AttachFlag.Passive);
-                    var clrVersion = dataTarget.ClrVersions.First();
-                    _runtime = clrVersion.CreateRuntime();
-                }
+                var clrVersion = dataTarget.ClrVersions.First();
+                var runtime = clrVersion.CreateRuntime();
+
+                // Make sure the method is being Jitted
+                RuntimeHelpers.PrepareMethod(method.MethodHandle);
+
+                // Get the handle from clrmd
+                var clrmdMethodHandle = runtime.GetMethodByHandle((ulong)method.MethodHandle.Value.ToInt64());
+
+                if (clrmdMethodHandle.NativeCode == 0) throw new InvalidOperationException($"Unable to disassemble method `{method}`");
+
+                //var check = clrmdMethodHandle.NativeCode;
+                //var offsets = clrmdMethodHandle.ILOffsetMap;
+
+                var codePtr = clrmdMethodHandle.HotColdInfo.HotStart;
+                var codeSize = clrmdMethodHandle.HotColdInfo.HotSize;
+
+                // Disassemble with Iced
+                DecodeMethod(new IntPtr((long)codePtr), codeSize, builder, formatter);
             }
-
-            // Make sure the method is being Jitted
-            RuntimeHelpers.PrepareMethod(method.MethodHandle);
-
-            // Get the handle from clrmd
-            var clrmdMethodHandle = _runtime.GetMethodByHandle((ulong)method.MethodHandle.Value.ToInt64());
-
-            if (clrmdMethodHandle.NativeCode == 0) throw new InvalidOperationException($"Unable to disassemble method `{method}`");
-
-            //var check = clrmdMethodHandle.NativeCode;
-            //var offsets = clrmdMethodHandle.ILOffsetMap;
-
-            var codePtr = clrmdMethodHandle.HotColdInfo.HotStart;
-            var codeSize = clrmdMethodHandle.HotColdInfo.HotSize;
-
-            // Disassemble with Iced
-            DecodeMethod(new IntPtr((long)codePtr), codeSize, builder, formatter);
         }
 
         private static void DecodeMethod(IntPtr ptr, uint size, StringBuilder builder, Formatter formatter = null)
