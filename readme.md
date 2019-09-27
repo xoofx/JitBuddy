@@ -35,6 +35,10 @@ will produce the following output:
 
 ## Usage
 
+> Starting with .NET Core 3.0 Tiered compilation is enabled and you won't get the best ASM when running this code
+> In order to check the assembly, you should disable tiered compilation (that will fallback to best tiered model)
+> by setting the environment variable `set COMPlus_TieredCompilation=0`
+
 ```c#
 var method = ...; // Get a MethodInfo via typeof(XXX).GetMethod(...)
 var asm = method.ToAsm();
