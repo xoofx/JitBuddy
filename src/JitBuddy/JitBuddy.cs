@@ -68,14 +68,14 @@ namespace JitBuddy
             // reading data from a file or memory etc
             var codeReader = new UnmanagedCodeReader(ptr, size);
             var decoder = Decoder.Create(IntPtr.Size * 8, codeReader);
-            decoder.InstructionPointer = (ulong)ptr.ToInt64();
-            ulong endRip = decoder.InstructionPointer + (uint)size;
+            decoder.IP = (ulong)ptr.ToInt64();
+            ulong endRip = decoder.IP + (uint)size;
 
             // This list is faster than List<Instruction> since it uses refs to the Instructions
             // instead of copying them (each Instruction is 32 bytes in size). It has a ref indexer,
             // and a ref iterator. Add() uses 'in' (ref readonly).
             var instructions = new InstructionList();
-            while (decoder.InstructionPointer < endRip)
+            while (decoder.IP < endRip)
             {
                 // The method allocates an uninitialized element at the end of the list and
                 // returns a reference to it which is initialized by Decode().
@@ -94,8 +94,8 @@ namespace JitBuddy
             foreach (ref var instr in instructions)
             {
                 // Don't use instr.ToString(), it allocates more, uses masm syntax and default options
-                formatter.Format(ref instr, output);
-                builder.AppendLine($"{instr.IP64:X16} {output.ToStringAndReset()}");
+                formatter.Format(in instr, output);
+                builder.AppendLine($"{instr.IP:X16} {output.ToStringAndReset()}");
             }
         }
 
