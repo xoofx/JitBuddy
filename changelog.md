@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1 (28 Nov 2019)
+- Upgrade ClrMd to latest 1.1.x, Running on Linux now works on CoreCLR 3.0 ONLY!
+
 ## 0.3.0 (08 Nov 2019)
 - Upgrade Iced dependency. Allow to possibly run JitBuddy on Linux via ClrMd  (PR [4](https://github.com/xoofx/JitBuddy/pull/4))
 
