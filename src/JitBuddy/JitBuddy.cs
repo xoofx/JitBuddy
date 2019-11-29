@@ -46,6 +46,10 @@ namespace JitBuddy
                 // Make sure the method is being Jitted
                 RuntimeHelpers.PrepareMethod(method.MethodHandle);
 
+                // Attempt to make ClrMd aware of recent jitting:
+                // https://github.com/microsoft/clrmd/issues/303
+                dataTarget.DataReader.Flush();
+
                 // Get the handle from clrmd
                 var clrmdMethodHandle = runtime.GetMethodByHandle((ulong)method.MethodHandle.Value.ToInt64());
 

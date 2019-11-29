@@ -43,6 +43,11 @@ will produce the following output:
 var method = ...; // Get a MethodInfo via typeof(XXX).GetMethod(...)
 var asm = method.ToAsm();
 ```
+
+## Caveats
+
+- On Linux, JitBuddy only works (for now) on CoreCLR 3.0, CoreCLR 2.0-2.2 seem to not be properly supported by ClrMd: [#303](https://github.com/microsoft/clrmd/issues/303)
+  
 ## License
 
 This software is released under the [BSD-Clause 2 license](http://opensource.org/licenses/BSD-2-Clause). 
