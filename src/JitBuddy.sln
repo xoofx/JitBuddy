@@ -7,8 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JitBuddy", "JitBuddy\JitBud
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5B70039-F941-42A4-ADFB-4B4236ECA61F}"
 	ProjectSection(SolutionItems) = preProject
-		..\appveyor.yml = ..\appveyor.yml
 		..\changelog.md = ..\changelog.md
+		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
+		..\license.txt = ..\license.txt
 		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject

@@ -1,4 +1,4 @@
-# JitBuddy [![Build status](https://ci.appveyor.com/api/projects/status/ail3j0mtp4ubd0fb?svg=true)](https://ci.appveyor.com/project/xoofx/jitbuddy) [![NuGet](https://img.shields.io/nuget/v/JitBuddy.svg)](https://www.nuget.org/packages/JitBuddy/)
+# JitBuddy [![Build Status](https://github.com/xoofx/JitBuddy/workflows/ci/badge.svg?branch=master)](https://github.com/xoofx/JitBuddy/actions) [![NuGet](https://img.shields.io/nuget/v/JitBuddy.svg)](https://www.nuget.org/packages/JitBuddy/)
 
 <img align="right" width="160px" height="160px" src="img/JitBuddy.png">
 

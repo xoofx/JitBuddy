@@ -69,7 +69,7 @@ namespace JitBuddy
         private static void DecodeMethod(IntPtr ptr, uint size, StringBuilder builder, Formatter formatter = null)
         {
             // You can also pass in a hex string, eg. "90 91 929394", or you can use your own CodeReader
-            // reading data from a file or memory etc
+            // reading data from a file or memory etc.
             var codeReader = new UnmanagedCodeReader(ptr, size);
             var decoder = Decoder.Create(IntPtr.Size * 8, codeReader);
             decoder.IP = (ulong)ptr.ToInt64();

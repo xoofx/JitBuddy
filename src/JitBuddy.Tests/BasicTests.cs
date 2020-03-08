@@ -1,9 +1,10 @@
-using System;
-using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
 namespace JitBuddy.Tests
 {
+    using System;
+    using System.Runtime.CompilerServices;
+
     public class BasicTests
     {
         public static int AddMethod(int a, int b)
