@@ -38,17 +38,13 @@ namespace JitBuddy
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
-            using (var dataTarget = DataTarget.AttachToProcess(Process.GetCurrentProcess().Id, UInt32.MaxValue, AttachFlag.Passive))
+            using (var dataTarget = DataTarget.AttachToProcess(Process.GetCurrentProcess().Id, false))
             {
                 var clrVersion = dataTarget.ClrVersions.First();
                 var runtime = clrVersion.CreateRuntime();
 
                 // Make sure the method is being Jitted
                 RuntimeHelpers.PrepareMethod(method.MethodHandle);
-
-                // Attempt to make ClrMd aware of recent jitting:
-                // https://github.com/microsoft/clrmd/issues/303
-                dataTarget.DataReader.Flush();
 
                 // Get the handle from clrmd
                 var clrmdMethodHandle = runtime.GetMethodByHandle((ulong)method.MethodHandle.Value.ToInt64());
@@ -93,7 +89,7 @@ namespace JitBuddy
                 formatter.Options.DigitSeparator = "`";
                 formatter.Options.FirstOperandCharIndex = 10;
             }
-            var output = new StringBuilderFormatterOutput();
+            var output = new StringOutput();
             // Use InstructionList's ref iterator (C# 7.3) to prevent copying 32 bytes every iteration
             foreach (ref var instr in instructions)
             {
