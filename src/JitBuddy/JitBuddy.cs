@@ -57,12 +57,21 @@ namespace JitBuddy
                 var codePtr = clrmdMethodHandle.HotColdInfo.HotStart;
                 var codeSize = clrmdMethodHandle.HotColdInfo.HotSize;
 
+                // Formatters: Masm*, Nasm* and Gas* (AT&T)
+                if (formatter == null)
+                {
+                    var symbolResolver = new ClrRuntimeSymbolResolver(runtime);
+                    formatter = new NasmFormatter(symbolResolver);
+                    formatter.Options.DigitSeparator = "`";
+                    formatter.Options.FirstOperandCharIndex = 10;
+                }
+
                 // Disassemble with Iced
                 DecodeMethod(new IntPtr((long)codePtr), codeSize, builder, formatter);
             }
         }
 
-        private static void DecodeMethod(IntPtr ptr, uint size, StringBuilder builder, Formatter formatter = null)
+        private static void DecodeMethod(IntPtr ptr, uint size, StringBuilder builder, Formatter formatter)
         {
             // You can also pass in a hex string, eg. "90 91 929394", or you can use your own CodeReader
             // reading data from a file or memory etc.
@@ -82,13 +91,6 @@ namespace JitBuddy
                 decoder.Decode(out instructions.AllocUninitializedElement());
             }
 
-            // Formatters: Masm*, Nasm* and Gas* (AT&T)
-            if (formatter == null)
-            {
-                formatter = new NasmFormatter();
-                formatter.Options.DigitSeparator = "`";
-                formatter.Options.FirstOperandCharIndex = 10;
-            }
             var output = new StringOutput();
             // Use InstructionList's ref iterator (C# 7.3) to prevent copying 32 bytes every iteration
             foreach (ref var instr in instructions)
