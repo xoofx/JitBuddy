@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0 (23 Oct 2020)
+- Upgrade ClrMd to latest 2.0.x
+
 ## 0.3.1 (28 Nov 2019)
 - Upgrade ClrMd to latest 1.1.x, Running on Linux now works on CoreCLR 3.0 ONLY!
 
