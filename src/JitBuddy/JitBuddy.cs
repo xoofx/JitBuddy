@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -42,6 +42,7 @@ namespace JitBuddy
             {
                 var clrVersion = dataTarget.ClrVersions.First();
                 var runtime = clrVersion.CreateRuntime();
+                dataTarget.DataReader.FlushCachedData();
 
                 // Make sure the method is being Jitted
                 RuntimeHelpers.PrepareMethod(method.MethodHandle);
@@ -49,7 +50,7 @@ namespace JitBuddy
                 // Get the handle from clrmd
                 var clrmdMethodHandle = runtime.GetMethodByHandle((ulong)method.MethodHandle.Value.ToInt64());
 
-                if (clrmdMethodHandle.NativeCode == 0) throw new InvalidOperationException($"Unable to disassemble method `{method}`");
+                if ((clrmdMethodHandle?.NativeCode ?? 0) == 0) throw new InvalidOperationException($"Unable to disassemble method `{method}`");
 
                 //var check = clrmdMethodHandle.NativeCode;
                 //var offsets = clrmdMethodHandle.ILOffsetMap;
