@@ -52,11 +52,15 @@ namespace JitBuddy
 
                 if ((clrmdMethodHandle?.NativeCode ?? 0) == 0) throw new InvalidOperationException($"Unable to disassemble method `{method}`");
 
-                //var check = clrmdMethodHandle.NativeCode;
-                //var offsets = clrmdMethodHandle.ILOffsetMap;
+                var result = runtime.DacLibrary.SOSDacInterface.GetCodeHeaderData(clrmdMethodHandle.NativeCode, out var codeHeaderData);
 
-                var codePtr = clrmdMethodHandle.HotColdInfo.HotStart;
-                var codeSize = clrmdMethodHandle.HotColdInfo.HotSize;
+                var codePtr = codeHeaderData.MethodStart.Value;
+                var codeSize = codeHeaderData.HotRegionSize;
+
+                if (!result.IsOK || codePtr == 0 || codeSize == 0)
+                {
+                    return;
+                }
 
                 // Formatters: Masm*, Nasm* and Gas* (AT&T)
                 if (formatter == null)
