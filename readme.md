@@ -63,4 +63,4 @@ The Logo `processor` by [ibrandify](https://thenounproject.com/ibrandify) from t
 
 ## Author
 
-Alexandre Mutel aka [xoofx](http://xoofx.com).
+Alexandre Mutel aka [xoofx](https://xoofx.github.io).
